@@ -1,22 +1,28 @@
 <style>
   body {
     margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
   }
 </style>
 
-<p
-  style="
-    position: fixed;
-    z-index: 10;
-    color: white;
-    left: 10px;
-    top: 10px;
-    margin: 0;
-    font-family: sans-serif;
-    font-size: 14px;
-  "
->
-  <span>Score:</span> <span id="scoreEl">0</span>
-</p>
-<canvas></canvas>
+<div style="position: relative">
+  <p
+    style="
+      position: absolute;
+      z-index: 10;
+      color: white;
+      left: 10px;
+      top: 10px;
+      margin: 0;
+      font-family: sans-serif;
+      font-size: 14px;
+    "
+  >
+    <span>Score:</span> <span id="scoreEl">0</span>
+  </p>
+  <canvas></canvas>
+</div>
 <script src="./index.js"></script>
