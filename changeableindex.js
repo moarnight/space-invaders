@@ -46,264 +46,252 @@ canvas.height = 576;
 //   },
 // });
 
-// class Player {
-//   constructor() {
-//     this.velocity = {
-//       x: 0,
-//       y: 0,
-//     };
+class Player {
+  constructor() {
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
 
-//     this.rotation = 0;
-//     this.opacity = 1;
+    this.rotation = 0;
+    this.opacity = 1;
 
-//     const image = new Image();
-//     image.src = './img/spaceship.png';
-//     image.onload = () => {
-//       const scale = 0.15;
-//       this.image = image;
-//       this.width = image.width * scale;
-//       this.height = image.height * scale;
-//       this.position = {
-//         x: canvas.width / 2 - this.width / 2,
-//         y: canvas.height - this.height - 20,
-//       };
-//     };
-//   }
+    const image = new Image();
+    image.src = './img/spaceship.png';
+    image.onload = () => {
+      const scale = 0.15;
+      this.image = image;
+      this.width = image.width * scale;
+      this.height = image.height * scale;
+      this.position = {
+        x: canvas.width / 2 - this.width / 2,
+        y: canvas.height - this.height - 20,
+      };
+    };
+  }
 
-//   draw() {
-//     // context.fillStyle = 'red';
-//     // context.fillRect(this.position.x, this.position.y, this.width, this.height);
-//     // Rotating an object in canvas:
+  draw() {
+    // context.fillStyle = 'red';
+    // context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    // Rotating an object in canvas:
 
-//     c.save();
-//     c.globalAlpha = this.opacity;
-//     c.translate(
-//       this.position.x + this.width / 2,
-//       this.position.y + this.height / 2
-//     );
-//     c.rotate(this.rotation);
+    c.save();
+    c.globalAlpha = this.opacity;
+    c.translate(
+      this.position.x + this.width / 2,
+      this.position.y + this.height / 2
+    );
+    c.rotate(this.rotation);
 
-//     c.translate(
-//       -this.position.x - this.width / 2,
-//       -this.position.y - this.height / 2
-//     );
+    c.translate(
+      -this.position.x - this.width / 2,
+      -this.position.y - this.height / 2
+    );
 
-//     c.drawImage(
-//       this.image,
-//       this.position.x,
-//       this.position.y,
-//       this.width,
-//       this.height
-//     );
-//     c.restore();
-//   }
+    c.drawImage(
+      this.image,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+    c.restore();
+  }
 
-//   update() {
-//     if (this.image) {
-//       this.draw();
-//       this.position.x += this.velocity.x;
-//     }
-//   }
-// }
+  update() {
+    if (this.image) {
+      this.draw();
+      this.position.x += this.velocity.x;
+    }
+  }
+}
 
-// class Projectile {
-//   constructor({ position, velocity, color, shape }) {
-//     this.position = position;
-//     this.velocity = velocity;
-//     this.color = color;
-//     this.shape = shape;
-//     this.width = 3;
-//     this.height = 10;
-//     this.radius = 4;
-//   }
+class Projectile {
+  constructor({ position, velocity }) {
+    this.position = position;
+    this.velocity = velocity;
 
-//   draw() {
-//     c.beginPath();
-//     //since there's no circle method in canvas, arc is the next best thing
-//     this.shape === 'circle'
-//       ? c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-//       : c.fillRect(this.position.x, this.position.y, this.width, this.height);
-//     c.fillStyle = this.color;
-//     // 'hsl(120, 100%, 50%)'
-//     c.fill();
-//     c.closePath();
-//   }
+    this.radius = 4;
+  }
 
-//   update() {
-//     this.draw();
-//     this.position.x += this.velocity.x;
-//     this.position.y += this.velocity.y;
-//   }
-// }
+  draw() {
+    c.beginPath();
+    //since there's no circle method in canvas, arc is the next best thing
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    c.fillStyle = 'hsl(120, 100%, 50%)';
+    c.fill();
+    c.closePath();
+  }
 
-// class Particle {
-//   constructor({ position, velocity, radius, color, fades }) {
-//     this.position = position;
-//     this.velocity = velocity;
+  update() {
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+  }
+}
 
-//     this.radius = radius;
-//     this.color = color;
-//     this.opacity = 1;
-//     this.fades = fades;
-//   }
+class Particle {
+  constructor({ position, velocity, radius, color, fades }) {
+    this.position = position;
+    this.velocity = velocity;
 
-//   draw() {
-//     c.save();
-//     c.globalAlpha = this.opacity;
-//     c.beginPath();
-//     //since there's no circle method in canvas, arc is the next best thing
-//     c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-//     c.fillStyle = this.color;
-//     c.fill();
-//     c.closePath();
-//     c.restore();
-//   }
+    this.radius = radius;
+    this.color = color;
+    this.opacity = 1;
+    this.fades = fades;
+  }
 
-//   update() {
-//     this.draw();
-//     this.position.x += this.velocity.x;
-//     this.position.y += this.velocity.y;
+  draw() {
+    c.save();
+    c.globalAlpha = this.opacity;
+    c.beginPath();
+    //since there's no circle method in canvas, arc is the next best thing
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    c.fillStyle = this.color;
+    c.fill();
+    c.closePath();
+    c.restore();
+  }
 
-//     if (this.fades) {
-//       this.opacity -= 0.01;
-//     }
-//   }
-// }
+  update() {
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
 
-// class InvaderProjectile {
-//   constructor({ position, velocity }) {
-//     this.position = position;
-//     this.velocity = velocity;
+    if (this.fades) {
+      this.opacity -= 0.01;
+    }
+  }
+}
 
-//     this.width = 3;
-//     this.height = 10;
-//   }
+class InvaderProjectile {
+  constructor({ position, velocity }) {
+    this.position = position;
+    this.velocity = velocity;
 
-//   draw() {
-//     c.fillStyle = 'purple';
-//     c.fillRect(this.position.x, this.position.y, this.width, this.height);
-//   }
+    this.width = 3;
+    this.height = 10;
+  }
 
-//   update() {
-//     this.draw();
-//     this.position.x += this.velocity.x;
-//     this.position.y += this.velocity.y;
-//   }
-// }
+  draw() {
+    c.fillStyle = 'purple';
+    c.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
 
-// class Invader {
-//   constructor({ position }) {
-//     this.velocity = {
-//       x: 0,
-//       y: 0,
-//     };
+  update() {
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+  }
+}
 
-//     const image = new Image();
-//     image.src = './img/SkeletonFlamingSkull.png';
-//     image.onload = () => {
-//       const scale = 1;
-//       this.image = image;
-//       this.width = image.width * scale;
-//       this.height = image.height * scale;
-//       this.position = {
-//         x: position.x,
-//         y: position.y,
-//       };
-//     };
-//     // console.dir(image);
-//   }
+class Invader {
+  constructor({ position }) {
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
 
-//   draw() {
-//     c.drawImage(
-//       this.image,
-//       this.position.x,
-//       this.position.y,
-//       this.width,
-//       this.height
-//     );
-//   }
+    const image = new Image();
+    image.src = './img/SkeletonFlamingSkull.png';
+    image.onload = () => {
+      const scale = 1;
+      this.image = image;
+      this.width = image.width * scale;
+      this.height = image.height * scale;
+      this.position = {
+        x: position.x,
+        y: position.y,
+      };
+    };
+    // console.dir(image);
+  }
 
-//   update({ velocity }) {
-//     if (this.image) {
-//       this.draw();
-//       this.position.x += velocity.x;
-//       this.position.y += velocity.y;
-//     }
-//   }
+  draw() {
+    c.drawImage(
+      this.image,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+  }
 
-//   shoot(invaderProjectiles) {
-//     invaderProjectiles.push(
-//       new InvaderProjectile({
-//         position: {
-//           x: this.position.x + this.width / 2,
-//           y: this.position.y + this.height,
-//         },
-//         velocity: {
-//           x: 0,
-//           y: 5,
-//         },
-//       })
-//     );
-//   }
-// }
+  update({ velocity }) {
+    if (this.image) {
+      this.draw();
+      this.position.x += velocity.x;
+      this.position.y += velocity.y;
+    }
+  }
 
-// class Grid {
-//   constructor() {
-//     this.position = {
-//       x: 0,
-//       y: 0,
-//     };
+  shoot(invaderProjectiles) {
+    invaderProjectiles.push(
+      new InvaderProjectile({
+        position: {
+          x: this.position.x + this.width / 2,
+          y: this.position.y + this.height,
+        },
+        velocity: {
+          x: 0,
+          y: 5,
+        },
+      })
+    );
+  }
+}
 
-//     this.velocity = {
-//       x: 3,
-//       y: 0,
-//     };
+class Grid {
+  constructor() {
+    this.position = {
+      x: 0,
+      y: 0,
+    };
 
-//     this.invaders = [];
+    this.velocity = {
+      x: 3,
+      y: 0,
+    };
 
-//     const columns = Math.floor(Math.random() * 10 + 5);
-//     const rows = Math.floor(Math.random() * 5 + 2);
-//     this.width = columns * 28;
+    this.invaders = [];
 
-//     for (let x = 0; x < columns; x++) {
-//       for (let y = 0; y < rows; y++) {
-//         this.invaders.push(
-//           new Invader({
-//             position: {
-//               x: x * 28,
-//               y: y * 28,
-//             },
-//             velocity: this.velocity,
-//             imageSrc: './img/SkeletonFlamingSkull.png',
-//           })
-//         );
-//       }
-//     }
-//   }
+    const columns = Math.floor(Math.random() * 10 + 5);
+    const rows = Math.floor(Math.random() * 5 + 2);
+    this.width = columns * 28;
 
-//   update() {
-//     this.position.x += this.velocity.x;
-//     this.position.y += this.velocity.y;
+    for (let x = 0; x < columns; x++) {
+      for (let y = 0; y < rows; y++) {
+        const invader = new Invader({
+          position: {
+            x: x * 28,
+            y: y * 28,
+          },
+          velocity: this.velocity,
+        });
 
-//     this.velocity.y = 0;
+        invader.setVelocity(this.velocity);
 
-//     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
-//       this.velocity.x = -this.velocity.x;
-//       this.velocity.y = 28;
-//     }
-//   }
-// }
+        this.invaders.push(invader);
+      }
+    }
+  }
+
+  update() {
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+
+    this.velocity.y = 0;
+
+    if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
+      this.velocity.x = -this.velocity.x;
+      this.velocity.y = 28;
+    }
+  }
+}
 
 const player = new Player({
-  imageSrc: './img/spaceship.png',
-  position: {
-    x: 0,
-    y: 0,
-  },
-  velocity: {
-    x: 0,
-    y: 0,
-  },
+  position: { x: 0, y: 0 },
+  velocity: { x: 0, y: 0 },
 });
 const projectiles = [];
 const grids = [];
@@ -508,7 +496,7 @@ function animate() {
 
   //spawning enemies
   if (frames % randomInterval === 0) {
-    grids.push(new InvaderGrid());
+    grids.push(new Grid());
     randomInterval = Math.floor(Math.random() * 500 + 500);
     frames = 0;
     console.log(randomInterval);
@@ -543,8 +531,6 @@ addEventListener('keydown', ({ key }) => {
             x: 0,
             y: -10,
           },
-          color: 'hsl(120, 100%, 50%)',
-          shape: 'circle',
         })
       );
 
