@@ -4,6 +4,7 @@ class Invader extends Character {
   }
 
   shoot(invaderProjectiles) {
+    console.log(this.position.y);
     invaderProjectiles.push(
       new Projectile({
         position: {

@@ -7,17 +7,20 @@ class Projectile {
     this.width = 3;
     this.height = 10;
     this.radius = 4;
+    this.draw = this.shape === 'circle' ? this.drawCircle : this.drawRectangle;
   }
 
-  draw() {
+  drawCircle() {
     c.beginPath();
-    //since there's no circle method in canvas, arc is the next best thing
-    this.shape === 'circle'
-      ? c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-      : c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
     c.fillStyle = this.color;
     c.fill();
     c.closePath();
+  }
+
+  drawRectangle() {
+    c.fillStyle = this.color;
+    c.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
   update() {
