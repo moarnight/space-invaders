@@ -6,6 +6,7 @@ class GameController {
     this.grids = [];
     this.invaderProjectiles = [];
     this.particles = [];
+    this.powerups = [];
 
     this.keys = {
       a: {
@@ -34,6 +35,20 @@ class GameController {
     this.addListeners();
 
     this.animate();
+
+    const powerup = new Powerup({
+      imageSrc: './img/ammo-pistol-alt 32px.png',
+      position: {
+        x: 0,
+        y: 0,
+      },
+      velocity: {
+        x: 0,
+        y: 0,
+      },
+    });
+
+    this.powerups.push(powerup);
   }
 
   createStars() {
@@ -211,6 +226,10 @@ class GameController {
       } else {
         projectile.update();
       }
+    });
+
+    this.powerups.forEach((powerup, index) => {
+      powerup.update();
     });
 
     this.grids.forEach((grid, gridIndex) => {
