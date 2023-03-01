@@ -37,23 +37,7 @@ class GameController {
     this.addListeners();
     this.elapsedTimeBeforeCurrentAnimate = 0;
     this.animate();
-
-    const powerup = new Powerup({
-      imageSrc: './img/ammo-pistol-alt 32px.png',
-      position: {
-        x: Math.floor(Math.random() * (canvas.width - 32)),
-        y: 0,
-      },
-      velocity: {
-        x: 0,
-        y: 2,
-      },
-    });
-
-    this.powerups.push(powerup);
   }
-
-  createPowerup() {}
 
   createStars() {
     for (let i = 0; i < 100; i++) {
@@ -323,6 +307,23 @@ class GameController {
     }
 
     //spawning power-ups
+    if (this.powerupCooldown <= 0) {
+      this.powerups.push(
+        new Powerup({
+          imageSrc: './img/ammo-pistol-alt 32px.png',
+          position: {
+            x: Math.floor(Math.random() * (canvas.width - 32)),
+            y: 0,
+          },
+          velocity: {
+            x: 0,
+            y: 2,
+          },
+        })
+      );
+      this.powerupCooldown = Math.floor(Math.random() * 3000 + 5000);
+    }
+
     const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
 
     this.gridCooldown -= frameTime;
