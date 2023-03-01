@@ -27,6 +27,7 @@ class GameController {
     this.frames = 0;
     this.gridCooldown = 0;
     this.powerupCooldown = 0;
+    this.invaderShootingCooldown = Math.floor(Math.random() * 3000 + 1500);
 
     this.createStars();
 
@@ -41,7 +42,7 @@ class GameController {
       imageSrc: './img/ammo-pistol-alt 32px.png',
       position: {
         x: Math.floor(Math.random() * (canvas.width - 32)),
-        y: Math.floor(Math.random() * (canvas.height - 32 - 130)),
+        y: 0,
       },
       velocity: {
         x: 0,
@@ -131,7 +132,7 @@ class GameController {
               y: -10,
             },
             color: 'hsl(120, 100%, 50%)',
-            shape: 'circle',
+            radius: 6,
           })
         );
 
@@ -160,6 +161,26 @@ class GameController {
     addEventListener('keydown', this.onKeydown);
 
     addEventListener('keyup', this.onKeyup);
+  }
+
+  collisionDetected(object, character) {
+    if (object.radius) {
+      // projectile -> object, invader -> character
+      return (
+        object.position.y - object.radius <=
+          character.position.y + character.height &&
+        object.position.x + object.radius >= character.position.x &&
+        object.position.x - object.radius <=
+          character.position.x + character.width &&
+        object.position.y + object.radius >= character.position.y
+      );
+    } else {
+      return (
+        object.position.y + object.height >= character.position.y &&
+        object.position.x + object.width >= character.position.x &&
+        object.position.x <= character.position.x + character.width
+      );
+    }
   }
 
   animate(timestamp = 0) {
@@ -195,14 +216,7 @@ class GameController {
         invaderProjectile.update();
       }
 
-      if (
-        invaderProjectile.position.y + invaderProjectile.height >=
-          this.player.position.y &&
-        invaderProjectile.position.x + invaderProjectile.width >=
-          this.player.position.x &&
-        invaderProjectile.position.x <=
-          this.player.position.x + this.player.width
-      ) {
+      if (this.collisionDetected(invaderProjectile, this.player)) {
         //remove player
         setTimeout(() => {
           this.invaderProjectiles.splice(index, 1);
@@ -213,7 +227,6 @@ class GameController {
         setTimeout(() => {
           this.game.active = false;
         }, 2000);
-        console.log('u lose');
         this.createCollisionParticles({
           object: this.player,
           color: 'white',
@@ -238,24 +251,17 @@ class GameController {
     this.grids.forEach((grid, gridIndex) => {
       grid.update();
       //spawn projectiles
-      if (this.powerupCooldown <= 0 && grid.invaders.length > 0) {
+      if (this.invaderShootingCooldown <= 0 && grid.invaders.length > 0) {
         grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
           this.invaderProjectiles
         );
-        this.powerupCooldown = Math.floor(Math.random() * 3000 + 1500);
+        this.invaderShootingCooldown = Math.floor(Math.random() * 3000 + 1500);
       }
       grid.invaders.forEach((invader, i) => {
         invader.update({ velocity: grid.velocity });
         this.playerProjectiles.forEach((projectile, j) => {
           //collision detection
-          if (
-            projectile.position.y - projectile.radius <=
-              invader.position.y + invader.height &&
-            projectile.position.x + projectile.radius >= invader.position.x &&
-            projectile.position.x - projectile.radius <=
-              invader.position.x + invader.width &&
-            projectile.position.y + projectile.radius >= invader.position.y
-          ) {
+          if (this.collisionDetected(projectile, invader)) {
             setTimeout(() => {
               const invaderFound = grid.invaders.find(
                 (targetInvader) => targetInvader === invader
@@ -320,9 +326,8 @@ class GameController {
     const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
 
     this.gridCooldown -= frameTime;
-    this, (this.powerupCooldown -= frameTime);
-
-    console.log(this.gridCooldown);
+    this.powerupCooldown -= frameTime;
+    this.invaderShootingCooldown -= frameTime;
 
     this.elapsedTimeBeforeCurrentAnimate = timestamp;
   }

@@ -1,13 +1,12 @@
 class Projectile {
-  constructor({ position, velocity, color, shape }) {
+  constructor({ position, velocity, color, width, height, radius }) {
     this.position = position;
     this.velocity = velocity;
     this.color = color;
-    this.shape = shape;
-    this.width = 3;
-    this.height = 10;
-    this.radius = 6;
-    this.draw = this.shape === 'circle' ? this.drawCircle : this.drawRectangle;
+    this.width = width;
+    this.height = height;
+    this.radius = radius;
+    this.draw = radius ? this.drawCircle : this.drawRectangle;
   }
 
   drawCircle() {

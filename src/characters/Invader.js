@@ -4,7 +4,6 @@ class Invader extends Character {
   }
 
   shoot(invaderProjectiles) {
-    console.log(this.position.y);
     invaderProjectiles.push(
       new Projectile({
         position: {
@@ -16,7 +15,8 @@ class Invader extends Character {
           y: 5,
         },
         color: 'purple',
-        shape: 'rectangle',
+        width: 3,
+        height: 10,
       })
     );
   }
