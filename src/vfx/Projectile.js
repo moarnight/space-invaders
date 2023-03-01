@@ -6,7 +6,7 @@ class Projectile {
     this.shape = shape;
     this.width = 3;
     this.height = 10;
-    this.radius = 4;
+    this.radius = 6;
     this.draw = this.shape === 'circle' ? this.drawCircle : this.drawRectangle;
   }
 

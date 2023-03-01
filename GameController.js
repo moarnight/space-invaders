@@ -25,7 +25,8 @@ class GameController {
     };
     this.score = 0;
     this.frames = 0;
-    this.randomInterval = Math.floor(Math.random() * 500 + 500);
+    this.gridCooldown = 0;
+    this.powerupCooldown = 0;
 
     this.createStars();
 
@@ -33,23 +34,25 @@ class GameController {
     this.onKeyup = this.onKeyup.bind(this);
 
     this.addListeners();
-
+    this.elapsedTimeBeforeCurrentAnimate = 0;
     this.animate();
 
     const powerup = new Powerup({
       imageSrc: './img/ammo-pistol-alt 32px.png',
       position: {
-        x: 0,
-        y: 0,
+        x: Math.floor(Math.random() * (canvas.width - 32)),
+        y: Math.floor(Math.random() * (canvas.height - 32 - 130)),
       },
       velocity: {
         x: 0,
-        y: 0,
+        y: 2,
       },
     });
 
     this.powerups.push(powerup);
   }
+
+  createPowerup() {}
 
   createStars() {
     for (let i = 0; i < 100; i++) {
@@ -159,7 +162,7 @@ class GameController {
     addEventListener('keyup', this.onKeyup);
   }
 
-  animate() {
+  animate(timestamp = 0) {
     if (!this.game.active) return;
 
     requestAnimationFrame(this.animate.bind(this));
@@ -235,10 +238,11 @@ class GameController {
     this.grids.forEach((grid, gridIndex) => {
       grid.update();
       //spawn projectiles
-      if (this.frames % 100 === 0 && grid.invaders.length > 0) {
+      if (this.powerupCooldown <= 0 && grid.invaders.length > 0) {
         grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
           this.invaderProjectiles
         );
+        this.powerupCooldown = Math.floor(Math.random() * 3000 + 1500);
       }
       grid.invaders.forEach((invader, i) => {
         invader.update({ velocity: grid.velocity });
@@ -305,11 +309,21 @@ class GameController {
     }
 
     //spawning enemies
-    if (this.frames % this.randomInterval === 0) {
+    if (this.gridCooldown <= 0) {
       this.grids.push(new InvaderGrid());
-      this.randomInterval = Math.floor(Math.random() * 500 + 500);
-      this.frames = 0;
+      this.gridCooldown = Math.floor(Math.random() * 3000 + 8000);
+
+      // this.frames = 0;
     }
-    this.frames += 1;
+
+    //spawning power-ups
+    const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
+
+    this.gridCooldown -= frameTime;
+    this, (this.powerupCooldown -= frameTime);
+
+    console.log(this.gridCooldown);
+
+    this.elapsedTimeBeforeCurrentAnimate = timestamp;
   }
 }
