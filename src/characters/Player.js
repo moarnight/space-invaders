@@ -4,6 +4,7 @@ class Player extends Character {
 
     this.rotation = 0;
     this.opacity = 1;
+    this.level = 1;
     // this.shootingCooldown = 1000;
   }
 

@@ -128,17 +128,23 @@ class GameController {
   onKeyup({ key }) {
     switch (key) {
       case 'a':
-        console.log('left');
+        // console.log('left');
         this.keys.a.pressed = false;
         break;
       case 'd':
-        console.log('right');
+        // console.log('right');
         this.keys.d.pressed = false;
         break;
       case ' ':
-        console.log('space');
+        // console.log('space');
         break;
     }
+  }
+
+  removePowerup(powerups, index) {
+    setTimeout(() => {
+      this.powerups.splice(index, 1);
+    }, 0);
   }
 
   addListeners() {
@@ -233,7 +239,7 @@ class GameController {
     this.powerups.forEach((powerup, index) => {
       if (powerup.position.y + powerup.height >= canvas.height) {
         setTimeout(() => {
-          this.invaderProjectiles.splice(index, 1);
+          this.powerups.splice(index, 1);
         }, 0);
       } else {
         powerup.update();
@@ -332,10 +338,39 @@ class GameController {
       this.powerupCooldown = Math.floor(Math.random() * 3000 + 5000);
     }
 
-    this.powerups.forEach((powerup, i) => {
+    this.powerups.forEach((powerup, index) => {
+      // console.log(powerup);
       powerup.update();
-      if (this.collisionDetected(powerup, this.player)) {
-        console.log('BOOM');
+      if (
+        this.collisionDetected(powerup, this.player) &&
+        this.player.level > 3
+      ) {
+        this.removePowerup(this.powerups, index);
+        this.player.level++;
+        this.score += 500;
+        scoreEl.innerHTML = this.score;
+        console.log('+500 to score');
+      } else if (
+        this.collisionDetected(powerup, this.player) &&
+        this.player.level === 3
+      ) {
+        console.log('level 3');
+        this.removePowerup(this.powerups, index);
+        this.player.level++;
+      } else if (
+        this.collisionDetected(powerup, this.player) &&
+        this.player.level === 2
+      ) {
+        console.log('level 2');
+        this.removePowerup(this.powerups, index);
+        this.player.level++;
+      } else if (
+        this.collisionDetected(powerup, this.player) &&
+        this.player.level === 1
+      ) {
+        console.log('level 1');
+        this.removePowerup(this.powerups, index);
+        this.player.level++;
       }
     });
 
@@ -346,5 +381,6 @@ class GameController {
     this.invaderShootingCooldown -= frameTime;
 
     this.elapsedTimeBeforeCurrentAnimate = timestamp;
+    // console.log(this.powerups);
   }
 }
