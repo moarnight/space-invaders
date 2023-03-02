@@ -162,7 +162,8 @@ class GameController {
       return (
         object.position.y + object.height >= character.position.y &&
         object.position.x + object.width >= character.position.x &&
-        object.position.x <= character.position.x + character.width
+        object.position.x <= character.position.x + character.width &&
+        object.position.y <= character.position.y + character.height
       );
     }
   }
@@ -228,8 +229,15 @@ class GameController {
       }
     });
 
+    //splice out the power-up once it goes off screen
     this.powerups.forEach((powerup, index) => {
-      powerup.update();
+      if (powerup.position.y + powerup.height >= canvas.height) {
+        setTimeout(() => {
+          this.invaderProjectiles.splice(index, 1);
+        }, 0);
+      } else {
+        powerup.update();
+      }
     });
 
     this.grids.forEach((grid, gridIndex) => {
@@ -323,6 +331,13 @@ class GameController {
       );
       this.powerupCooldown = Math.floor(Math.random() * 3000 + 5000);
     }
+
+    this.powerups.forEach((powerup, i) => {
+      powerup.update();
+      if (this.collisionDetected(powerup, this.player)) {
+        console.log('BOOM');
+      }
+    });
 
     const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
 
