@@ -12,6 +12,22 @@ class Projectile {
   drawCircle() {
     c.beginPath();
     c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    //2 bullets
+    // c.arc(
+    //   this.position.x + this.radius * 2,
+    //   this.position.y,
+    //   this.radius,
+    //   0,
+    //   Math.PI * 2
+    // );
+    // 3 bullets
+    // c.arc(
+    //   (this.position.x + this.width) / 2,
+    //   this.position.y,
+    //   this.radius,
+    //   0,
+    //   Math.PI * 2
+    // );
     c.fillStyle = this.color;
     c.fill();
     c.closePath();

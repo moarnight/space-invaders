@@ -2,7 +2,6 @@ class Powerup {
   constructor(cfg) {
     this.velocity = cfg.velocity;
     this.position = cfg.position;
-    this.level = 1;
     this.createImage(cfg.imageSrc);
   }
 

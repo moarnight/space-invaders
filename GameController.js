@@ -94,17 +94,13 @@ class GameController {
 
   onKeydown({ key }) {
     if (this.game.over) return;
-    switch (key) {
-      case 'a':
-        // console.log('left');
-        this.keys.a.pressed = true;
-        break;
-      case 'd':
-        // console.log('right');
-        this.keys.d.pressed = true;
-        break;
-      case ' ':
-        // console.log('space');
+
+    if (key === 'a') {
+      this.keys.a.pressed = true;
+    } else if (key === 'd') {
+      this.keys.d.pressed = true;
+    } else if (key === ' ') {
+      if (this.player.level === 1) {
         this.playerProjectiles.push(
           new Projectile({
             position: {
@@ -119,9 +115,75 @@ class GameController {
             radius: 6,
           })
         );
-
-        // console.log(projectiles);
-        break;
+      } else if (this.player.level === 2) {
+        setTimeout(() => {
+          this.playerProjectiles.push(
+            new Projectile({
+              position: {
+                x: this.player.position.x,
+                y: this.player.position.y,
+              },
+              velocity: {
+                x: 0,
+                y: -10,
+              },
+              color: 'hsl(120, 100%, 50%)',
+              radius: 6,
+            }),
+            new Projectile({
+              position: {
+                x: this.player.position.x + this.player.width,
+                y: this.player.position.y,
+              },
+              velocity: {
+                x: 0,
+                y: -10,
+              },
+              color: 'hsl(120, 100%, 50%)',
+              radius: 6,
+            })
+          );
+        }, 0);
+      } else if (this.player.level === 3) {
+        this.playerProjectiles.push(
+          new Projectile({
+            position: {
+              x: this.player.position.x,
+              y: this.player.position.y,
+            },
+            velocity: {
+              x: 0,
+              y: -10,
+            },
+            color: 'hsl(120, 100%, 50%)',
+            radius: 6,
+          }),
+          new Projectile({
+            position: {
+              x: this.player.position.x + this.player.width / 2,
+              y: this.player.position.y,
+            },
+            velocity: {
+              x: 0,
+              y: -10,
+            },
+            color: 'hsl(120, 100%, 50%)',
+            radius: 6,
+          }),
+          new Projectile({
+            position: {
+              x: this.player.position.x + this.player.width,
+              y: this.player.position.y,
+            },
+            velocity: {
+              x: 0,
+              y: -10,
+            },
+            color: 'hsl(120, 100%, 50%)',
+            radius: 6,
+          })
+        );
+      }
     }
   }
 
@@ -196,6 +258,7 @@ class GameController {
       }
     });
     this.invaderProjectiles.forEach((invaderProjectile, index) => {
+      invaderProjectile.update();
       if (
         invaderProjectile.position.y + invaderProjectile.height >=
         canvas.height
@@ -203,8 +266,6 @@ class GameController {
         setTimeout(() => {
           this.invaderProjectiles.splice(index, 1);
         }, 0);
-      } else {
-        invaderProjectile.update();
       }
 
       if (this.collisionDetected(invaderProjectile, this.player)) {
@@ -225,14 +286,14 @@ class GameController {
         });
       }
     });
-    this.playerProjectiles.forEach((projectile, index) => {
-      if (projectile.position.y + projectile.radius <= 0) {
-        setTimeout(() => {
-          this.playerProjectiles.splice(index, 1);
-        }, 0);
-      } else {
-        projectile.update();
-      }
+
+    // Clear projectiles that go off-screen
+    this.playerProjectiles = this.playerProjectiles.filter(
+      (projectile) => projectile.position.y + projectile.radius > 0
+    );
+
+    this.playerProjectiles.forEach((projectile) => {
+      projectile.update();
     });
 
     //splice out the power-up once it goes off screen
@@ -314,7 +375,7 @@ class GameController {
 
     //spawning enemies
     if (this.gridCooldown <= 0) {
-      this.grids.push(new InvaderGrid());
+      // this.grids.push(new InvaderGrid());
       this.gridCooldown = Math.floor(Math.random() * 3000 + 8000);
 
       // this.frames = 0;
@@ -343,32 +404,24 @@ class GameController {
       powerup.update();
       if (
         this.collisionDetected(powerup, this.player) &&
-        this.player.level > 3
+        this.player.level === 3
       ) {
         this.removePowerup(this.powerups, index);
-        this.player.level++;
         this.score += 500;
         scoreEl.innerHTML = this.score;
         console.log('+500 to score');
       } else if (
         this.collisionDetected(powerup, this.player) &&
-        this.player.level === 3
+        this.player.level === 2
       ) {
         console.log('level 3');
         this.removePowerup(this.powerups, index);
         this.player.level++;
       } else if (
         this.collisionDetected(powerup, this.player) &&
-        this.player.level === 2
-      ) {
-        console.log('level 2');
-        this.removePowerup(this.powerups, index);
-        this.player.level++;
-      } else if (
-        this.collisionDetected(powerup, this.player) &&
         this.player.level === 1
       ) {
-        console.log('level 1');
+        console.log('level 2');
         this.removePowerup(this.powerups, index);
         this.player.level++;
       }
@@ -382,5 +435,7 @@ class GameController {
 
     this.elapsedTimeBeforeCurrentAnimate = timestamp;
     // console.log(this.powerups);
+
+    console.log(this.playerProjectiles);
   }
 }
