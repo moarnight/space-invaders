@@ -337,7 +337,8 @@ class GameController {
                   object: invader,
                   fades: true,
                 });
-                grid.invaders.splice(i, 1);
+                // grid.invaders.splice(i, 1);
+                grid.removeInvader(invader);
                 this.playerProjectiles.splice(j, 1);
 
                 if (grid.invaders.length > 0) {
@@ -375,7 +376,7 @@ class GameController {
 
     //spawning enemies
     if (this.gridCooldown <= 0) {
-      // this.grids.push(new InvaderGrid());
+      this.grids.push(new InvaderGrid());
       this.gridCooldown = Math.floor(Math.random() * 3000 + 8000);
 
       // this.frames = 0;
@@ -436,6 +437,6 @@ class GameController {
     this.elapsedTimeBeforeCurrentAnimate = timestamp;
     // console.log(this.powerups);
 
-    console.log(this.playerProjectiles);
+    // console.log(this.playerProjectiles);
   }
 }
