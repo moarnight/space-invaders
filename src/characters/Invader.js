@@ -1,6 +1,7 @@
 class Invader extends Character {
   constructor(cfg) {
     super(cfg);
+    this.canShoot = true;
   }
 
   shoot(invaderProjectiles) {

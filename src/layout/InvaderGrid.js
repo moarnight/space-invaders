@@ -13,6 +13,8 @@ class InvaderGrid {
     // flat array of matrix to avoid triple loop for collision detection
     this.invaders = [];
 
+    this.shootingCooldown = Math.floor(Math.random() * 3000 + 1500);
+
     const columns = Math.floor(Math.random() * 6 + 4);
     const rows = Math.floor(Math.random() * 4 + 2);
     this.width = columns * 28;
@@ -69,7 +71,7 @@ class InvaderGrid {
     // }
   }
 
-  update() {
+  update(frameTime) {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
@@ -78,6 +80,9 @@ class InvaderGrid {
     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
       this.velocity.x = -this.velocity.x;
       this.velocity.y = 28;
+    }
+    if (this.shootingCooldown > 0) {
+      this.shootingCooldown -= frameTime;
     }
   }
 

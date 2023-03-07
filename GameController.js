@@ -28,7 +28,6 @@ class GameController {
     this.gridCooldown = 0;
     this.powerupCooldown = 0;
     this.gridsGenerated = 0;
-    this.invaderShootingCooldown = Math.floor(Math.random() * 3000 + 1500);
 
     this.createStars();
 
@@ -315,13 +314,16 @@ class GameController {
     });
 
     this.grids.forEach((grid, gridIndex) => {
-      grid.update();
+      grid.update(frameTime);
       //spawn projectiles
-      if (this.invaderShootingCooldown <= 0 && grid.invaders.length > 0) {
-        grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
+      if (grid.shootingCooldown <= 0 && grid.invaders.length > 0) {
+        const trueInvaders = grid.invaders.filter(
+          (invader) => invader.canShoot
+        );
+        trueInvaders[Math.floor(Math.random() * trueInvaders.length)].shoot(
           this.invaderProjectiles
         );
-        this.invaderShootingCooldown = Math.floor(Math.random() * 3000 + 1500);
+        grid.shootingCooldown = Math.floor(Math.random() * 3000 + 1500);
       }
       grid.invaders.forEach((invader, i) => {
         invader.update({ velocity: grid.velocity });
@@ -437,7 +439,6 @@ class GameController {
 
     this.gridCooldown -= frameTime;
     this.powerupCooldown -= frameTime;
-    this.invaderShootingCooldown -= frameTime;
 
     this.elapsedTimeBeforeCurrentAnimate = timestamp;
     // console.log(this.powerups);
