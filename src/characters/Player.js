@@ -2,10 +2,12 @@ class Player extends Character {
   constructor(cfg) {
     super(cfg);
 
+    this.COOLDOWN = 150;
+
     this.rotation = 0;
     this.opacity = 1;
     this.level = 1;
-    // this.shootingCooldown = 1000;
+    this.shootingCooldown = this.COOLDOWN;
   }
 
   createImage(src) {
@@ -45,6 +47,17 @@ class Player extends Character {
       this.height
     );
     c.restore();
+  }
+
+  update(frameTime) {
+    if (this.image) {
+      this.draw();
+      if (this.shootingCooldown > 0) {
+        this.shootingCooldown -= frameTime;
+      }
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y;
+    }
   }
 }
 

@@ -27,6 +27,7 @@ class GameController {
     this.frames = 0;
     this.gridCooldown = 0;
     this.powerupCooldown = 0;
+    this.gridsGenerated = 0;
     this.invaderShootingCooldown = Math.floor(Math.random() * 3000 + 1500);
 
     this.createStars();
@@ -100,27 +101,69 @@ class GameController {
     } else if (key === 'd') {
       this.keys.d.pressed = true;
     } else if (key === ' ') {
-      if (this.player.level === 1) {
-        this.playerProjectiles.push(
-          new Projectile({
-            position: {
-              x: this.player.position.x + this.player.width / 2,
-              y: this.player.position.y,
-            },
-            velocity: {
-              x: 0,
-              y: -10,
-            },
-            color: 'hsl(120, 100%, 50%)',
-            radius: 6,
-          })
-        );
-      } else if (this.player.level === 2) {
-        setTimeout(() => {
+      if (this.player.shootingCooldown <= 0) {
+        this.player.shootingCooldown = this.player.COOLDOWN;
+        if (this.player.level === 1) {
+          this.playerProjectiles.push(
+            new Projectile({
+              position: {
+                x: this.player.position.x + this.player.width / 2,
+                y: this.player.position.y,
+              },
+              velocity: {
+                x: 0,
+                y: -10,
+              },
+              color: 'hsl(120, 100%, 50%)',
+              radius: 6,
+            })
+          );
+        } else if (this.player.level === 2) {
+          setTimeout(() => {
+            this.playerProjectiles.push(
+              new Projectile({
+                position: {
+                  x: this.player.position.x,
+                  y: this.player.position.y,
+                },
+                velocity: {
+                  x: 0,
+                  y: -10,
+                },
+                color: 'hsl(120, 100%, 50%)',
+                radius: 6,
+              }),
+              new Projectile({
+                position: {
+                  x: this.player.position.x + this.player.width,
+                  y: this.player.position.y,
+                },
+                velocity: {
+                  x: 0,
+                  y: -10,
+                },
+                color: 'hsl(120, 100%, 50%)',
+                radius: 6,
+              })
+            );
+          }, 0);
+        } else if (this.player.level === 3) {
           this.playerProjectiles.push(
             new Projectile({
               position: {
                 x: this.player.position.x,
+                y: this.player.position.y,
+              },
+              velocity: {
+                x: 0,
+                y: -10,
+              },
+              color: 'hsl(120, 100%, 50%)',
+              radius: 6,
+            }),
+            new Projectile({
+              position: {
+                x: this.player.position.x + this.player.width / 2,
                 y: this.player.position.y,
               },
               velocity: {
@@ -143,46 +186,7 @@ class GameController {
               radius: 6,
             })
           );
-        }, 0);
-      } else if (this.player.level === 3) {
-        this.playerProjectiles.push(
-          new Projectile({
-            position: {
-              x: this.player.position.x,
-              y: this.player.position.y,
-            },
-            velocity: {
-              x: 0,
-              y: -10,
-            },
-            color: 'hsl(120, 100%, 50%)',
-            radius: 6,
-          }),
-          new Projectile({
-            position: {
-              x: this.player.position.x + this.player.width / 2,
-              y: this.player.position.y,
-            },
-            velocity: {
-              x: 0,
-              y: -10,
-            },
-            color: 'hsl(120, 100%, 50%)',
-            radius: 6,
-          }),
-          new Projectile({
-            position: {
-              x: this.player.position.x + this.player.width,
-              y: this.player.position.y,
-            },
-            velocity: {
-              x: 0,
-              y: -10,
-            },
-            color: 'hsl(120, 100%, 50%)',
-            radius: 6,
-          })
-        );
+        }
       }
     }
   }
@@ -240,9 +244,12 @@ class GameController {
     if (!this.game.active) return;
 
     requestAnimationFrame(this.animate.bind(this));
+    const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
+
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
-    this.player.update();
+
+    this.player.update(frameTime);
     this.particles.forEach((particle, i) => {
       if (particle.position.y - particle.radius >= canvas.height) {
         particle.position.x = Math.random() * canvas.width;
@@ -376,9 +383,9 @@ class GameController {
 
     //spawning enemies
     if (this.gridCooldown <= 0) {
-      this.grids.push(new InvaderGrid());
+      this.grids.push(new InvaderGrid(this.gridsGenerated % 3 === 0));
       this.gridCooldown = Math.floor(Math.random() * 3000 + 8000);
-
+      this.gridsGenerated += 1;
       // this.frames = 0;
     }
 
@@ -427,8 +434,6 @@ class GameController {
         this.player.level++;
       }
     });
-
-    const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
 
     this.gridCooldown -= frameTime;
     this.powerupCooldown -= frameTime;

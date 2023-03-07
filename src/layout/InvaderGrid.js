@@ -1,5 +1,5 @@
 class InvaderGrid {
-  constructor() {
+  constructor(hasBomb) {
     this.position = {
       x: 0,
       y: 0,
@@ -16,6 +16,7 @@ class InvaderGrid {
     const columns = Math.floor(Math.random() * 6 + 4);
     const rows = Math.floor(Math.random() * 4 + 2);
     this.width = columns * 28;
+    const desiredIndexForBomb = Math.floor(Math.random() * (columns * rows));
 
     this.matrix = [];
 
@@ -24,16 +25,29 @@ class InvaderGrid {
       this.matrix.push(tempArr);
       for (let x = 0; x < columns; x++) {
         // if desiredIndexForBomb === this.invaders.length create bomb, if not, create invader
-        const invader = new Invader({
-          position: {
-            x: x * 28,
-            y: y * 28,
-          },
-          velocity: this.velocity,
-          imageSrc: './img/SkeletonFlamingSkull.png',
-        });
-        tempArr.push(invader);
-        this.invaders.push(invader);
+        if (hasBomb && desiredIndexForBomb === this.invaders.length) {
+          const invader = new Bomb({
+            position: {
+              x: x * 28,
+              y: y * 28,
+            },
+            velocity: this.velocity,
+            imageSrc: './img/gift_01c.png',
+          });
+          tempArr.push(invader);
+          this.invaders.push(invader);
+        } else {
+          const invader = new Invader({
+            position: {
+              x: x * 28,
+              y: y * 28,
+            },
+            velocity: this.velocity,
+            imageSrc: './img/SkeletonFlamingSkull.png',
+          });
+          tempArr.push(invader);
+          this.invaders.push(invader);
+        }
       }
     }
 
