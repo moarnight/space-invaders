@@ -53,7 +53,7 @@ class InvaderGrid {
       }
     }
 
-    console.log(this.matrix);
+    // console.log(this.matrix);
 
     // for (let x = 0; x < columns; x++) {
     //   for (let y = 0; y < rows; y++) {
@@ -90,11 +90,39 @@ class InvaderGrid {
     return this.matrix.find((row) => row.includes(invader));
   }
 
+  findNeighboringElements(bomb) {
+    const toBeDestroyed = [];
+    const bombRow = this.getInvaderRowInMatrix(bomb);
+    const bombY = this.matrix.indexOf(bombRow);
+    const bombX = bombRow.indexOf(bomb);
+
+    for (let y = bombY - 1; y <= bombY + 1; y++) {
+      for (let x = bombX - 1; x <= bombX + 1; x++) {
+        const invaderFromMatrix = this.getInvaderFromMatrix(y, x);
+        if (invaderFromMatrix) {
+          toBeDestroyed.push(invaderFromMatrix);
+        }
+      }
+    }
+
+    console.log(toBeDestroyed);
+    return toBeDestroyed;
+
+    //if nearby el exists, add it to neighboringElementsAndBombArr
+    // if (this.matrix[y - 1] && this.matrix[y - 1][x + 1]) {
+    //   neighboringElementsAndBombArr.push(this.matrix[y - 1][x + 1]);
+    // }
+  }
+
+  getInvaderFromMatrix(y, x) {
+    if (this.matrix[y] && this.matrix[y][x]) {
+      return this.matrix[y][x];
+    }
+  }
+
   removeInvader(invader) {
     this.invaders.splice(this.invaders.indexOf(invader), 1);
-    console.log(invader);
     const row = this.getInvaderRowInMatrix(invader);
-    console.log(row);
 
     row.splice(row.indexOf(invader), 1);
 

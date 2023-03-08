@@ -340,27 +340,15 @@ class GameController {
 
               //remove invader and projectile
               if (invaderFound && projectileFound) {
-                this.score += 100;
-                scoreEl.innerHTML = this.score;
-                this.createCollisionParticles({
-                  object: invader,
-                  fades: true,
-                });
-                // grid.invaders.splice(i, 1);
-                grid.removeInvader(invader);
                 this.playerProjectiles.splice(j, 1);
+                if (invader.isBomb) {
+                  const toBeDestroyed = grid.findNeighboringElements(invader);
 
-                if (grid.invaders.length > 0) {
-                  const firstInvader = grid.invaders[0];
-                  const lastInvader = grid.invaders[grid.invaders.length - 1];
-
-                  grid.width =
-                    lastInvader.position.x -
-                    firstInvader.position.x +
-                    lastInvader.width;
-                  grid.position.x = firstInvader.position.x;
+                  toBeDestroyed.forEach((el) => {
+                    this.destroyInvader(el, grid);
+                  });
                 } else {
-                  this.grids.splice(gridIndex, 1);
+                  this.destroyInvader(invader, grid);
                 }
               }
             }, 0);
@@ -444,5 +432,27 @@ class GameController {
     // console.log(this.powerups);
 
     // console.log(this.playerProjectiles);
+  }
+
+  destroyInvader(invader, grid) {
+    this.score += 100;
+    scoreEl.innerHTML = this.score;
+    this.createCollisionParticles({
+      object: invader,
+      fades: true,
+    });
+    // grid.invaders.splice(i, 1);
+    grid.removeInvader(invader);
+
+    if (grid.invaders.length > 0) {
+      const firstInvader = grid.invaders[0];
+      const lastInvader = grid.invaders[grid.invaders.length - 1];
+
+      grid.width =
+        lastInvader.position.x - firstInvader.position.x + lastInvader.width;
+      grid.position.x = firstInvader.position.x;
+    } else {
+      this.grids.splice(this.grids.indexOf(grid), 1);
+    }
   }
 }
