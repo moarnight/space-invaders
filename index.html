@@ -1,38 +1,45 @@
-<style>
-  body {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: black;
-  }
-</style>
-
-<div style="position: relative">
-  <p
-    style="
-      position: absolute;
-      z-index: 10;
-      color: white;
-      left: 10px;
-      top: 10px;
-      margin: 0;
-      font-family: sans-serif;
-      font-size: 14px;
-    "
-  >
-    <span>Score:</span> <span id="scoreEl">0</span>
-  </p>
-  <canvas></canvas>
-</div>
-<script src="./src/canvas.js"></script>
-<script src="./src/vfx/Powerup.js"></script>
-<script src="./src/vfx/Projectile.js"></script>
-<script src="./src/vfx/Particle.js"></script>
-<script src="./src/characters/Character.js"></script>
-<script src="./src/characters/Invader.js"></script>
-<script src="./src/characters/Bomb.js"></script>
-<script src="./src/characters/Player.js"></script>
-<script src="./src/layout/InvaderGrid.js"></script>
-<script src="./GameController.js"></script>
-<script src="./index.js"></script>
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div style="position: relative">
+    <p
+      style="
+        position: absolute;
+        z-index: 10;
+        color: white;
+        left: 10px;
+        top: 10px;
+        margin: 0;
+        font-family: sans-serif;
+        font-size: 14px;
+      "
+    >
+    <span class="scoreEl">Score:<span id="score">0</span></span>  
+    </p>
+    <canvas id="canvas"></canvas>
+    <div class="menu">
+      <div class="score-counter">
+        <h2>High Score: 0</h2>
+      </div>
+      <div class="btn-container">
+        <button class="btn start-btn">START GAME</button>
+      </div>
+  </div>
+  <script src="./src/vfx/Background.js"></script>
+  <script src="./src/canvas.js"></script>
+  <script src="./src/vfx/Powerup.js"></script>
+  <script src="./src/vfx/Projectile.js"></script>
+  <script src="./src/vfx/Particle.js"></script>
+  <script src="./src/characters/Character.js"></script>
+  <script src="./src/characters/Invader.js"></script>
+  <script src="./src/characters/Bomb.js"></script>
+  <script src="./src/characters/Player.js"></script>
+  <script src="./src/layout/InvaderGrid.js"></script>
+  <script src="./GameController.js"></script>
+  <script src="./index.js"></script>
+</body>

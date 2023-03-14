@@ -239,14 +239,37 @@ class GameController {
     }
   }
 
+  EndGame() {
+    this.game.active = false;
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    bg.draw();
+    cancelAnimationFrame(this.frameRequest);
+  }
+
   animate(timestamp = 0) {
     if (!this.game.active) return;
 
-    requestAnimationFrame(this.animate.bind(this));
+    //too avoid huge timestamp on start, this runs on the second animate call
+    if (this.firstAnimationCycle) {
+      this.firstAnimationCycle = false;
+      this.elapsedTimeBeforeCurrentAnimate = timestamp;
+    }
+
+    if (!this.frameRequest) {
+      this.firstAnimationCycle = true;
+    }
+
+    this.frameRequest = requestAnimationFrame(this.animate.bind(this));
+
     const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
 
-    c.fillStyle = 'black';
-    c.fillRect(0, 0, canvas.width, canvas.height);
+    console.log(frameTime);
+    // canvas.width = canvas.width;
+
+    // c.fillStyle = 'black';
+    // c.fillRect(0, 0, canvas.width, canvas.height);
+    // c.globalAlpha = 0.8;
+    bg.draw();
 
     this.player.update(frameTime);
     this.particles.forEach((particle, i) => {
@@ -283,7 +306,7 @@ class GameController {
         }, 0);
 
         setTimeout(() => {
-          this.game.active = false;
+          this.EndGame();
         }, 2000);
         this.createCollisionParticles({
           object: this.player,
@@ -406,7 +429,7 @@ class GameController {
       ) {
         this.removePowerup(this.powerups, index);
         this.score += 500;
-        scoreEl.innerHTML = this.score;
+        score.innerText = this.score;
         console.log('+500 to score');
       } else if (
         this.collisionDetected(powerup, this.player) &&
@@ -432,11 +455,13 @@ class GameController {
     // console.log(this.powerups);
 
     // console.log(this.playerProjectiles);
+
+    // c.clearRect(0, 0, canvas.width, canvas.height);
   }
 
   destroyInvader(invader, grid) {
     this.score += 100;
-    scoreEl.innerHTML = this.score;
+    score.innerText = this.score;
     this.createCollisionParticles({
       object: invader,
       fades: true,
