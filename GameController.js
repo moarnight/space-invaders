@@ -241,9 +241,15 @@ class GameController {
 
   EndGame() {
     this.game.active = false;
+    const menu = document.querySelector('.menu');
+    const previousScore = document.querySelector('.prevScore');
+    const startBtn = document.querySelector('.start-btn');
     c.clearRect(0, 0, canvas.width, canvas.height);
     bg.draw();
     cancelAnimationFrame(this.frameRequest);
+    menu.classList.remove('hidden');
+    previousScore.innerText = this.score;
+    startBtn.innerText = 'RESTART?';
     localStorage.setItem('highScore', this.score);
   }
 
@@ -264,7 +270,7 @@ class GameController {
 
     const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
 
-    console.log(frameTime);
+    // console.log(frameTime);
     // canvas.width = canvas.width;
 
     // c.fillStyle = 'black';
