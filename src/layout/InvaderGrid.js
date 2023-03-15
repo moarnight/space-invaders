@@ -105,7 +105,7 @@ class InvaderGrid {
       }
     }
 
-    console.log(toBeDestroyed);
+    // console.log(toBeDestroyed);
     return toBeDestroyed;
 
     //if nearby el exists, add it to neighboringElementsAndBombArr

@@ -244,6 +244,7 @@ class GameController {
     c.clearRect(0, 0, canvas.width, canvas.height);
     bg.draw();
     cancelAnimationFrame(this.frameRequest);
+    localStorage.setItem('highScore', this.score);
   }
 
   animate(timestamp = 0) {

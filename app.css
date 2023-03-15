@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   height: 100vh;
   margin: 0;
@@ -30,6 +34,8 @@ body {
   border-radius: 15px;
   color: hsl(120, 100%, 50%);
   border: 2px solid hsl(120, 100%, 50%);
+  padding: 8px;
+  font-size: 14px;
 }
 
 .btn {
@@ -50,3 +56,5 @@ body {
 .hidden {
   display: none;
 }
+
+.
