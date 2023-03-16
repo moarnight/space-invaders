@@ -244,11 +244,12 @@ class GameController {
     const menu = document.querySelector('.menu');
     const previousScore = document.querySelector('.prevScore');
     const startBtn = document.querySelector('.start-btn');
+    const currScore = this.score;
     c.clearRect(0, 0, canvas.width, canvas.height);
     bg.draw();
     cancelAnimationFrame(this.frameRequest);
     menu.classList.remove('hidden');
-    previousScore.innerText = this.score;
+    previousScore.innerText = currScore;
     startBtn.innerText = 'RESTART?';
     localStorage.setItem('highScore', this.score);
   }
@@ -370,7 +371,13 @@ class GameController {
 
               //remove invader and projectile
               if (invaderFound && projectileFound) {
-                this.playerProjectiles.splice(j, 1);
+                this.playerProjectiles = this.playerProjectiles.filter((p) => {
+                  return p !== projectileFound;
+                });
+
+                this.playerProjectiles.forEach((projectile) => {
+                  projectile.update();
+                });
                 if (invader.isBomb) {
                   const toBeDestroyed = grid.findNeighboringElements(invader);
 
@@ -477,12 +484,36 @@ class GameController {
     grid.removeInvader(invader);
 
     if (grid.invaders.length > 0) {
-      const firstInvader = grid.invaders[0];
-      const lastInvader = grid.invaders[grid.invaders.length - 1];
+      // const firstInvader = grid.invaders[0];
+      // const lastInvader = grid.invaders[grid.invaders.length - 1];
 
-      grid.width =
-        lastInvader.position.x - firstInvader.position.x + lastInvader.width;
-      grid.position.x = firstInvader.position.x;
+      //set length by the longest row
+      // let longestRowLength = 0;
+      // console.log(grid);
+      // grid.forEach((row) => {
+      //   if (row.length > longestRowLength) {
+      //     longestRowLength = row.length;
+      //   }
+      // });
+
+      let leftmostInvaderX = canvas.width;
+      let rightmostInvaderX = 0;
+      grid.invaders.forEach((invader) => {
+        if (invader.position.x < leftmostInvaderX) {
+          leftmostInvaderX = invader.position.x;
+        }
+        if (invader.position.x > rightmostInvaderX) {
+          rightmostInvaderX = invader.position.x;
+        }
+      });
+
+      grid.width = rightmostInvaderX + grid.INVADER_WIDTH - leftmostInvaderX;
+
+      console.log(grid.width);
+      //find longest row:
+      //loop through rows
+      //check row length
+      //temporarily save result of each check
     } else {
       this.grids.splice(this.grids.indexOf(grid), 1);
     }

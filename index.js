@@ -23,6 +23,7 @@ function startGame() {
   game = new GameController();
   menu.classList.add('hidden');
   scoreEl.classList.remove('hidden');
+  score.innerText = 0;
 }
 
 function onEndGame() {}

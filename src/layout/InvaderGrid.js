@@ -10,6 +10,9 @@ class InvaderGrid {
       y: 0,
     };
 
+    this.INVADER_WIDTH = 20;
+    this.INVADER_HEIGHT = 28;
+
     // flat array of matrix to avoid triple loop for collision detection
     this.invaders = [];
 
@@ -17,7 +20,7 @@ class InvaderGrid {
 
     const columns = Math.floor(Math.random() * 6 + 4);
     const rows = Math.floor(Math.random() * 4 + 2);
-    this.width = columns * 28;
+    this.width = columns * this.INVADER_WIDTH;
     const desiredIndexForBomb = Math.floor(Math.random() * (columns * rows));
 
     this.matrix = [];
@@ -30,10 +33,15 @@ class InvaderGrid {
         if (hasBomb && desiredIndexForBomb === this.invaders.length) {
           const invader = new Bomb({
             position: {
-              x: x * 28,
-              y: y * 28,
+              x: x * this.INVADER_WIDTH,
+              y: y * this.INVADER_HEIGHT,
             },
-            velocity: this.velocity,
+            // velocity: this.velocity,
+            matrixIndex: {
+              x,
+              y,
+            },
+            gridPosition: this.position,
             imageSrc: './img/gift_01c.png',
           });
           tempArr.push(invader);
@@ -41,10 +49,15 @@ class InvaderGrid {
         } else {
           const invader = new Invader({
             position: {
-              x: x * 28,
-              y: y * 28,
+              x: x * this.INVADER_WIDTH,
+              y: y * this.INVADER_HEIGHT,
             },
-            velocity: this.velocity,
+            // velocity: this.velocity,
+            matrixIndex: {
+              x,
+              y,
+            },
+            gridPosition: this.position,
             imageSrc: './img/SkeletonFlamingSkull.png',
           });
           tempArr.push(invader);
@@ -77,9 +90,13 @@ class InvaderGrid {
 
     this.velocity.y = 0;
 
-    if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
+    const leftmostInvaderX = this.matrix[0][0].position.x;
+
+    if (leftmostInvaderX + this.width > canvas.width || leftmostInvaderX < 0) {
       this.velocity.x = -this.velocity.x;
-      this.velocity.y = 28;
+
+      this.position.x += 10 * Math.sign(this.velocity.x);
+      this.velocity.y = this.INVADER_HEIGHT;
     }
     if (this.shootingCooldown > 0) {
       this.shootingCooldown -= frameTime;
@@ -121,11 +138,9 @@ class InvaderGrid {
   }
 
   removeInvader(invader) {
-    this.invaders.splice(this.invaders.indexOf(invader), 1);
+    this.invaders = this.invaders.filter((i) => i !== invader);
     const row = this.getInvaderRowInMatrix(invader);
 
-    row.splice(row.indexOf(invader), 1);
-
-    // console.log(this.matrix);
+    this.matrix[this.matrix.indexOf(row)] = row.filter((i) => i !== invader);
   }
 }

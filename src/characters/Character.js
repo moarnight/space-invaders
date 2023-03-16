@@ -30,8 +30,9 @@ class Character {
     this.velocity.y = y;
   }
 
-  update() {
+  update({ velocity }) {
     if (this.image) {
+      this.velocity = velocity;
       this.draw();
       this.position.x += this.velocity.x;
       this.position.y += this.velocity.y;

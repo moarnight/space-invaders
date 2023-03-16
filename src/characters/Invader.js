@@ -2,6 +2,8 @@ class Invader extends Character {
   constructor(cfg) {
     super(cfg);
     this.canShoot = true;
+    this.gridPosition = cfg.gridPosition;
+    this.matrixIndex = cfg.matrixIndex;
   }
 
   shoot(invaderProjectiles) {
@@ -20,5 +22,13 @@ class Invader extends Character {
         height: 10,
       })
     );
+  }
+
+  update() {
+    if (this.image) {
+      this.draw();
+      this.position.x = this.gridPosition.x + this.matrixIndex.x * this.width;
+      this.position.y = this.gridPosition.y + this.matrixIndex.y * this.height;
+    }
   }
 }
