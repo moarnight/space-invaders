@@ -8,6 +8,8 @@ class GameController {
     this.particles = [];
     this.powerups = [];
 
+    this.BOTTOM_BORDER = canvas.height - 40;
+
     this.keys = {
       a: {
         pressed: false,
@@ -36,7 +38,7 @@ class GameController {
 
     this.addListeners();
     this.elapsedTimeBeforeCurrentAnimate = 0;
-    this.animate();
+    this.update();
   }
 
   createStars() {
@@ -254,7 +256,7 @@ class GameController {
     localStorage.setItem('highScore', this.score);
   }
 
-  animate(timestamp = 0) {
+  update(timestamp = 0) {
     if (!this.game.active) return;
 
     //too avoid huge timestamp on start, this runs on the second animate call
@@ -267,7 +269,7 @@ class GameController {
       this.firstAnimationCycle = true;
     }
 
-    this.frameRequest = requestAnimationFrame(this.animate.bind(this));
+    this.frameRequest = requestAnimationFrame(this.update.bind(this));
 
     const frameTime = timestamp - this.elapsedTimeBeforeCurrentAnimate;
 
@@ -358,6 +360,9 @@ class GameController {
       }
       grid.invaders.forEach((invader, i) => {
         invader.update({ velocity: grid.velocity });
+        if (this.invaderReachedBottom(invader)) {
+          this.EndGame();
+        }
         this.playerProjectiles.forEach((projectile, j) => {
           //collision detection
           if (this.collisionDetected(projectile, invader)) {
@@ -471,6 +476,12 @@ class GameController {
     // console.log(this.playerProjectiles);
 
     // c.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  invaderReachedBottom(invader) {
+    if (invader.position.y >= this.BOTTOM_BORDER) {
+      return true;
+    }
   }
 
   destroyInvader(invader, grid) {

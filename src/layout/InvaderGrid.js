@@ -87,6 +87,7 @@ class InvaderGrid {
   update(frameTime) {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
+    const padding = 10;
 
     this.velocity.y = 0;
 
@@ -95,7 +96,10 @@ class InvaderGrid {
     if (leftmostInvaderX + this.width > canvas.width || leftmostInvaderX < 0) {
       this.velocity.x = -this.velocity.x;
 
-      this.position.x += 10 * Math.sign(this.velocity.x);
+      //prevents grid from being stuck in the periphery of the screen
+      this.position.x +=
+        this.velocity.x * 2 + padding * Math.sign(this.velocity.x);
+
       this.velocity.y = this.INVADER_HEIGHT;
     }
     if (this.shootingCooldown > 0) {
