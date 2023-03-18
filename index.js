@@ -20,10 +20,15 @@ previousScore.innerText = highScore ? highScore : '0';
 let game;
 
 function startGame() {
-  game = new GameController();
+  game = new GameController(showEndMenu);
   menu.classList.add('hidden');
   scoreEl.classList.remove('hidden');
   score.innerText = 0;
 }
 
-function onEndGame() {}
+function showEndMenu() {
+  const currScore = game.score;
+  menu.classList.remove('hidden');
+  previousScore.innerText = currScore;
+  startBtn.innerText = 'RESTART?';
+}

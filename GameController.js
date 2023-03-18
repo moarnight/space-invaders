@@ -1,5 +1,5 @@
 class GameController {
-  constructor() {
+  constructor(onEndgame) {
     this.player = this.createPlayer();
 
     this.playerProjectiles = [];
@@ -7,6 +7,7 @@ class GameController {
     this.invaderProjectiles = [];
     this.particles = [];
     this.powerups = [];
+    this.onEndgame = onEndgame;
 
     this.BOTTOM_BORDER = canvas.height - 40;
 
@@ -220,6 +221,12 @@ class GameController {
     addEventListener('keyup', this.onKeyup);
   }
 
+  removeListeners() {
+    removeEventListener('keydown', this.onKeydown);
+
+    removeEventListener('keyup', this.onKeyup);
+  }
+
   collisionDetected(object, character) {
     if (object.radius) {
       // projectile -> object, invader -> character
@@ -241,19 +248,14 @@ class GameController {
     }
   }
 
-  EndGame() {
+  endGame() {
+    this.removeListeners();
     this.game.active = false;
-    const menu = document.querySelector('.menu');
-    const previousScore = document.querySelector('.prevScore');
-    const startBtn = document.querySelector('.start-btn');
-    const currScore = this.score;
     c.clearRect(0, 0, canvas.width, canvas.height);
     bg.draw();
     cancelAnimationFrame(this.frameRequest);
-    menu.classList.remove('hidden');
-    previousScore.innerText = currScore;
-    startBtn.innerText = 'RESTART?';
     localStorage.setItem('highScore', this.score);
+    this.onEndgame();
   }
 
   update(timestamp = 0) {
@@ -283,6 +285,7 @@ class GameController {
 
     this.player.update(frameTime);
     this.particles.forEach((particle, i) => {
+      //If stars go out of the screen, push them back with randomized postion
       if (particle.position.y - particle.radius >= canvas.height) {
         particle.position.x = Math.random() * canvas.width;
         particle.position.y = -particle.radius;
@@ -316,7 +319,7 @@ class GameController {
         }, 0);
 
         setTimeout(() => {
-          this.EndGame();
+          this.endGame();
         }, 2000);
         this.createCollisionParticles({
           object: this.player,
@@ -361,7 +364,7 @@ class GameController {
       grid.invaders.forEach((invader, i) => {
         invader.update({ velocity: grid.velocity });
         if (this.invaderReachedBottom(invader)) {
-          this.EndGame();
+          this.endGame();
         }
         this.playerProjectiles.forEach((projectile, j) => {
           //collision detection
