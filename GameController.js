@@ -14,7 +14,9 @@ class GameController {
     //Cooldowns:
     this.GRID_COOLDOWN = Math.floor(Math.random() * 3000 + 8000);
     this.POWERUP_COOLDOWN = Math.floor(Math.random() * 3000 + 5000);
-    this._GRID = Math.floor(Math.random() * 3000 + 1500);
+    this.INVADER_GRID_SHOOTING_COOLDOWN = Math.floor(
+      Math.random() * 3000 + 1500
+    );
 
     this.keys = {
       a: {
@@ -158,62 +160,6 @@ class GameController {
             })
           );
         }
-        //
-
-        // if (this.player.level === 1) {
-        //   this.playerProjectiles.push(
-        //     new Projectile({
-        //       position: {
-        //         x: this.player.position.x + this.player.width / 2,
-        //         y: this.player.position.y,
-        //       },
-        //       ...projectileConfig,
-        //     })
-        //   );
-        // } else if (this.player.level === 2) {
-        //   setTimeout(() => {
-        //     this.playerProjectiles.push(
-        //       new Projectile({
-        //         position: {
-        //           x: this.player.position.x,
-        //           y: this.player.position.y,
-        //         },
-        //         ...projectileConfig,
-        //       }),
-        //       new Projectile({
-        //         position: {
-        //           x: this.player.position.x + this.player.width,
-        //           y: this.player.position.y,
-        //         },
-        //         ...projectileConfig,
-        //       })
-        //     );
-        //   }, 0);
-        // } else if (this.player.level === 3) {
-        //   this.playerProjectiles.push(
-        //     new Projectile({
-        //       position: {
-        //         x: this.player.position.x,
-        //         y: this.player.position.y,
-        //       },
-        //       ...projectileConfig,
-        //     }),
-        //     new Projectile({
-        //       position: {
-        //         x: this.player.position.x + this.player.width / 2,
-        //         y: this.player.position.y,
-        //       },
-        //       ...projectileConfig,
-        //     }),
-        //     new Projectile({
-        //       position: {
-        //         x: this.player.position.x + this.player.width,
-        //         y: this.player.position.y,
-        //       },
-        //       ...projectileConfig,
-        //     })
-        //   );
-        // }
       }
     }
   }
@@ -237,15 +183,12 @@ class GameController {
   onKeyup({ key }) {
     switch (key) {
       case 'a':
-        // console.log('left');
         this.keys.a.pressed = false;
         break;
       case 'd':
-        // console.log('right');
         this.keys.d.pressed = false;
         break;
       case ' ':
-        // console.log('space');
         break;
     }
   }
@@ -258,13 +201,11 @@ class GameController {
 
   addListeners() {
     addEventListener('keydown', this.onKeydown);
-
     addEventListener('keyup', this.onKeyup);
   }
 
   removeListeners() {
     removeEventListener('keydown', this.onKeydown);
-
     removeEventListener('keyup', this.onKeyup);
   }
 
@@ -428,7 +369,6 @@ class GameController {
         this.playerProjectiles.forEach((projectile, j) => {
           //collision detection
           if (this.collisionDetected(projectile, invader)) {
-            // setTimeout(() => {
             this.playerProjectiles = this.playerProjectiles.filter((p) => {
               return p !== projectile;
             });
@@ -445,7 +385,6 @@ class GameController {
             } else {
               this.destroyInvader(invader, grid);
             }
-            // }, 0);
           }
         });
       });
