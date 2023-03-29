@@ -244,7 +244,6 @@ class GameController {
     if (this.player.level >= this.MAX_PLAYER_LVL) {
       this.score += 500;
       score.innerText = this.score;
-      console.log('+500 to score');
     } else {
       this.player.level++;
     }
@@ -377,7 +376,6 @@ class GameController {
 
             if (invader.isBomb) {
               const toBeDestroyed = grid.findNeighboringElements(invader);
-              console.log(toBeDestroyed);
 
               toBeDestroyed.forEach((el) => {
                 this.destroyInvader(el, grid);
