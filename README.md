@@ -9,7 +9,7 @@ The game includes bombs that destroy adjacent enemies as well as player booster 
 
 Press `A` and `D` to move left and right respectively, press/hold `SPACE` to shoot.
 
-### [Play the game here 👾](https://space-skull-invaders.netlify.app/)
+### [Play the game here 👾](https://space-invaders-moarnight.netlify.app/)
 
 #### Credits
 
